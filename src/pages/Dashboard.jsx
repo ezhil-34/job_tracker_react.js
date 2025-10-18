@@ -1,7 +1,131 @@
+import { useState } from "react";
+
 export default function Dashboard() {
+  const [applications, setApplications] = useState([]);
+  const [formData, setFormData] = useState({
+    company: "",
+    role: "",
+    status: "",
+    date: "",
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setApplications([...applications, formData]);
+    setFormData({ company: "", role: "", status: "", date: "" });
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <h1 className="text-3xl font-bold text-blue-600">Welcome to your Dashboard!</h1>
+    <div className="flex min-h-screen bg-gray-100">
+      {/* Sidebar */}
+      <aside className="w-64 bg-white shadow-md p-6">
+        <h2 className="text-xl font-bold mb-6 text-blue-600">Job Tracker</h2>
+        <nav className="space-y-4">
+          <a href="#" className="block text-gray-700 hover:text-blue-500">Dashboard</a>
+          <a href="#" className="block text-gray-700 hover:text-blue-500">Applications</a>
+          <a href="#" className="block text-gray-700 hover:text-blue-500">Profile</a>
+        </nav>
+      </aside>
+
+      {/* Main Content */}
+      <main className="flex-1 p-6">
+        <header className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold">Dashboard</h1>
+          <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Logout</button>
+        </header>
+
+        <section>
+          {/* Stats Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+            <div className="bg-white p-4 rounded shadow text-center">
+              <h3 className="text-lg font-semibold text-gray-700">Total Applied</h3>
+              <p className="text-3xl font-bold text-blue-600">{applications.length}</p>
+            </div>
+            <div className="bg-white p-4 rounded shadow text-center">
+              <h3 className="text-lg font-semibold text-gray-700">Interviews</h3>
+              <p className="text-3xl font-bold text-green-600">5</p>
+            </div>
+            <div className="bg-white p-4 rounded shadow text-center">
+              <h3 className="text-lg font-semibold text-gray-700">Offers</h3>
+              <p className="text-3xl font-bold text-purple-600">2</p>
+            </div>
+          </div>
+
+          {/* Add Application Form */}
+          <div className="bg-white p-4 rounded shadow mt-10 mb-6">
+            <h2 className="text-lg font-semibold mb-4">Add New Application</h2>
+            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <input
+                type="text"
+                placeholder="Company"
+                value={formData.company}
+                onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                className="border p-2 rounded"
+                required
+              />
+              <input
+                type="text"
+                placeholder="Role"
+                value={formData.role}
+                onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                className="border p-2 rounded"
+                required
+              />
+              <input
+                type="text"
+                placeholder="Status"
+                value={formData.status}
+                onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                className="border p-2 rounded"
+                required
+              />
+              <input
+                type="date"
+                value={formData.date}
+                onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                className="border p-2 rounded"
+                required
+              />
+              <button
+                type="submit"
+                className="col-span-1 md:col-span-4 bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+              >
+                Add Application
+              </button>
+            </form>
+          </div>
+
+          {/* Job Application Table */}
+          <div className="mt-10">
+            <h2 className="text-xl font-semibold mb-4">Your Applications</h2>
+            <table className="min-w-full bg-white rounded shadow overflow-hidden">
+              <thead className="bg-gray-200 text-gray-700">
+                <tr>
+                  <th className="text-left px-4 py-2">Company</th>
+                  <th className="text-left px-4 py-2">Role</th>
+                  <th className="text-left px-4 py-2">Status</th>
+                  <th className="text-left px-4 py-2">Date Applied</th>
+                  <th className="text-left px-4 py-2">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {applications.map((app, index) => (
+                  <tr key={index} className="border-t">
+                    <td className="px-4 py-2">{app.company}</td>
+                    <td className="px-4 py-2">{app.role}</td>
+                    <td className="px-4 py-2 text-green-600 font-semibold">{app.status}</td>
+                    <td className="px-4 py-2">{app.date}</td>
+                    <td className="px-4 py-2 space-x-2">
+                      <button className="text-blue-500 hover:underline">Edit</button>
+                      <button className="text-red-500 hover:underline">Delete</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
     </div>
   );
 }
