@@ -8,11 +8,34 @@ export default function Dashboard() {
     status: "",
     date: "",
   });
+  const [editIndex, setEditIndex] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setApplications([...applications, formData]);
+    if (editIndex !== null) {
+      const updated = [...applications];
+      updated[editIndex] = formData;
+      setApplications(updated);
+      setEditIndex(null);
+    } else {
+      setApplications([...applications, formData]);
+    }
     setFormData({ company: "", role: "", status: "", date: "" });
+  };
+
+  const handleDelete = (index) => {
+    const updated = [...applications];
+    updated.splice(index, 1);
+    setApplications(updated);
+    if (editIndex === index) {
+      setEditIndex(null);
+      setFormData({ company: "", role: "", status: "", date: "" });
+    }
+  };
+
+  const handleEdit = (index) => {
+    setFormData(applications[index]);
+    setEditIndex(index);
   };
 
   return (
@@ -51,9 +74,11 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Add Application Form */}
+          {/* Add/Edit Application Form */}
           <div className="bg-white p-4 rounded shadow mt-10 mb-6">
-            <h2 className="text-lg font-semibold mb-4">Add New Application</h2>
+            <h2 className="text-lg font-semibold mb-4">
+              {editIndex !== null ? "Edit Application" : "Add New Application"}
+            </h2>
             <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <input
                 type="text"
@@ -90,7 +115,7 @@ export default function Dashboard() {
                 type="submit"
                 className="col-span-1 md:col-span-4 bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
               >
-                Add Application
+                {editIndex !== null ? "Update Application" : "Add Application"}
               </button>
             </form>
           </div>
@@ -116,8 +141,18 @@ export default function Dashboard() {
                     <td className="px-4 py-2 text-green-600 font-semibold">{app.status}</td>
                     <td className="px-4 py-2">{app.date}</td>
                     <td className="px-4 py-2 space-x-2">
-                      <button className="text-blue-500 hover:underline">Edit</button>
-                      <button className="text-red-500 hover:underline">Delete</button>
+                      <button
+                        onClick={() => handleEdit(index)}
+                        className="text-blue-500 hover:underline"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(index)}
+                        className="text-red-500 hover:underline"
+                      >
+                        Delete
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -129,3 +164,4 @@ export default function Dashboard() {
     </div>
   );
 }
+
