@@ -125,14 +125,14 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100">
       {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-md p-6">
+      <aside className="w-64 bg-white dark:bg-gray-800 shadow-md p-6">
         <h2 className="text-xl font-bold mb-6 text-blue-600">Job Tracker</h2>
         <nav className="space-y-4">
-          <a href="#" className="block text-gray-700 hover:text-blue-500">Dashboard</a>
-          <a href="#" className="block text-gray-700 hover:text-blue-500">Applications</a>
-          <a href="#" className="block text-gray-700 hover:text-blue-500">Profile</a>
+          <a href="#" className="block text-gray-700 dark:text-gray-300 hover:text-blue-500">Dashboard</a>
+          <a href="#" className="block text-gray-700 dark:text-gray-300 hover:text-blue-500">Applications</a>
+          <a href="#" className="block text-gray-700 dark:text-gray-300 hover:text-blue-500">Profile</a>
         </nav>
       </aside>
 
@@ -140,28 +140,34 @@ export default function Dashboard() {
       <main className="flex-1 p-6">
         <header className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Dashboard</h1>
+          <button
+            onClick={() => document.documentElement.classList.toggle('dark')}
+            className="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-700"
+          >
+            Toggle Dark Mode
+          </button>
           <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Logout</button>
         </header>
 
         <section>
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-            <div className="bg-white p-4 rounded shadow text-center">
-              <h3 className="text-lg font-semibold text-gray-700">Total Applied</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3  gap-6 mt-6">
+            <div className="bg-white dark:bg-gray-800 p-4 rounded shadow text-center">
+              <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">Total Applied</h3>
               <p className="text-3xl font-bold text-blue-600">{applications.length}</p>
             </div>
-            <div className="bg-white p-4 rounded shadow text-center">
-              <h3 className="text-lg font-semibold text-gray-700">Interviews</h3>
+            <div className="bg-white dark:bg-gray-800 p-4 rounded shadow text-center">
+              <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">Interviews</h3>
               <p className="text-3xl font-bold text-green-600">0</p>
             </div>
-            <div className="bg-white p-4 rounded shadow text-center">
-              <h3 className="text-lg font-semibold text-gray-700">Offers</h3>
+            <div className="bg-white dark:bg-gray-800 p-4 rounded shadow text-center">
+              <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">Offers</h3>
               <p className="text-3xl font-bold text-purple-600">0</p>
             </div>
           </div>
 
           {/* Add/Edit Application Form */}
-          <div className="bg-white p-4 rounded shadow mt-10 mb-6">
+          <div className="bg-white dark:bg-gray-800 p-4 rounded shadow mt-10 mb-6">
             <h2 className="text-lg font-semibold mb-4">
               {editIndex !== null ? "Edit Application" : "Add New Application"}
             </h2>
@@ -171,7 +177,7 @@ export default function Dashboard() {
                 placeholder="Company"
                 value={formData.company}
                 onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                className="border p-2 rounded"
+                className=" dark:bg-gray-800 border p-2 rounded"
                 required
               />
               <input
@@ -179,7 +185,7 @@ export default function Dashboard() {
                 placeholder="Role"
                 value={formData.role}
                 onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                className="border p-2 rounded"
+                className=" dark:bg-gray-800 border p-2 rounded"
                 required
               />
               <input
@@ -187,31 +193,31 @@ export default function Dashboard() {
                 placeholder="Status"
                 value={formData.status}
                 onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                className="border p-2 rounded"
+                className=" dark:bg-gray-800 border p-2 rounded"
                 required
               />
               <input
                 type="date"
                 value={formData.date}
                 onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                className="border p-2 rounded"
+                className=" dark:bg-gray-800 border p-2 rounded"
                 required
               />
               <button
                 type="submit"
-                className="col-span-1 md:col-span-4 bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+                className=" col-span-1 md:col-span-4 bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
               >
                 {editIndex !== null ? "Update Application" : "Add Application"}
               </button>
             </form>
           </div>
-          <div className="bg-white p-4 rounded shadow mt-10 mb-6">
+          <div className="bg-white dark:bg-gray-800 p-4 rounded shadow mt-10 mb-6">
               <h2 className="text-lg font-semibold mb-4">Status Breakdown</h2>
               <div className="w-64 h-64 mx-auto">
                 <Pie data={chartData} options={{ maintainAspectRatio: false }} />
               </div>
           </div>
-          <div className="bg-white p-4 rounded shadow mt-10 mb-6">
+          <div className="bg-white dark:bg-gray-800 p-4 rounded shadow mt-10 mb-6">
             <h2 className="text-lg font-semibold mb-4">Applications Per Month</h2>
             <div className="w-full md:w-2/3 h-64 mx-auto">
               <Bar data={barData} options={{ maintainAspectRatio: false }} />
@@ -224,7 +230,7 @@ export default function Dashboard() {
               placeholder="Search by company..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full md:w-1/3 border p-2 rounded"
+              className=" dark:bg-gray-800 w-full md:w-1/3 border p-2 rounded"
             />
           </div>
 
@@ -234,12 +240,12 @@ export default function Dashboard() {
               placeholder="Search by company..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full md:w-1/3 border p-2 rounded"
+              className=" dark:bg-gray-800 w-full md:w-1/3 border p-2 rounded"
             />
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-full md:w-1/4 border p-2 rounded"
+              className=" dark:bg-gray-800 w-full md:w-1/4 border p-2 rounded"
             >
               <option value="">All Statuses</option>
               <option value="Applied">Applied</option>
@@ -255,12 +261,12 @@ export default function Dashboard() {
               placeholder="Search by company..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full md:w-1/3 border p-2 rounded"
+              className=" dark:bg-gray-800 w-full md:w-1/3 border p-2 rounded"
             />
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-full md:w-1/4 border p-2 rounded"
+              className=" dark:bg-gray-800 w-full md:w-1/4 border p-2 rounded"
             >
               <option value="">All Statuses</option>
               <option value="Applied">Applied</option>
@@ -271,7 +277,7 @@ export default function Dashboard() {
             <select
               value={sortOrder}
               onChange={(e) => setSortOrder(e.target.value)}
-              className="w-full md:w-1/4 border p-2 rounded"
+              className=" dark:bg-gray-800 w-full md:w-1/4 border p-2 rounded"
             >
               <option value="newest">Newest First</option>
               <option value="oldest">Oldest First</option>
@@ -281,8 +287,8 @@ export default function Dashboard() {
           {/* Job Application Table */}
           <div className="mt-10">
             <h2 className="text-xl font-semibold mb-4">Your Applications</h2>
-            <table className="min-w-full bg-white rounded shadow overflow-hidden">
-              <thead className="bg-gray-200 text-gray-700">
+            <table className=" min-w-full bg-white rounded shadow overflow-hidden">
+              <thead className=" bg-gray-200 text-gray-700">
                 <tr>
                   <th className="text-left px-4 py-2">Company</th>
                   <th className="text-left px-4 py-2">Role</th>
