@@ -1,4 +1,31 @@
 import { useState, useEffect } from "react";
+import { Pie } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
+
+
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+} from "chart.js";
+
+ChartJS.register(
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title
+);
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function Dashboard() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -12,6 +39,21 @@ export default function Dashboard() {
     date: "",
   });
   const [editIndex, setEditIndex] = useState(null);
+  //prepare chart data
+  const statusCounts = applications.reduce((acc, app) => {
+  acc[app.status] = (acc[app.status] || 0) + 1;
+    return acc;
+  }, {});
+
+  const chartData = {
+    labels: Object.keys(statusCounts),
+    datasets: [
+      {
+        data: Object.values(statusCounts),
+        backgroundColor: ["#9CA3AF", "#34D399", "#A78BFA", "#F87171"],
+      },
+    ],
+  };
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -50,6 +92,36 @@ export default function Dashboard() {
   const handleEdit = (index) => {
     setFormData(applications[index]);
     setEditIndex(index);
+  };
+  const monthlyCounts = applications.reduce((acc, app) => {
+  const month = new Date(app.date).toLocaleString("default", { month: "short", year: "numeric" });
+    acc[month] = (acc[month] || 0) + 1;
+    return acc;     
+  }, {}); 
+
+  const barData = {
+    labels: Object.keys(monthlyCounts),
+    datasets: [
+      {
+        label: "Applications",
+        data: Object.values(monthlyCounts),
+        backgroundColor: "#3B82F6",
+      },
+    ],
+  };
+  const getStatusStyle = (status) => {
+    switch (status) {
+      case "Applied":
+        return "text-gray-600 bg-gray-100";
+      case "Interview":
+        return "text-green-600 bg-green-100";
+      case "Offer":
+        return "text-purple-600 bg-purple-100";
+      case "Rejected":
+        return "text-red-600 bg-red-100";
+      default:
+        return "text-blue-600 bg-blue-100";
+    }
   };
 
   return (
@@ -133,7 +205,18 @@ export default function Dashboard() {
               </button>
             </form>
           </div>
-
+          <div className="bg-white p-4 rounded shadow mt-10 mb-6">
+              <h2 className="text-lg font-semibold mb-4">Status Breakdown</h2>
+              <div className="w-64 h-64 mx-auto">
+                <Pie data={chartData} options={{ maintainAspectRatio: false }} />
+              </div>
+          </div>
+          <div className="bg-white p-4 rounded shadow mt-10 mb-6">
+            <h2 className="text-lg font-semibold mb-4">Applications Per Month</h2>
+            <div className="w-full md:w-2/3 h-64 mx-auto">
+              <Bar data={barData} options={{ maintainAspectRatio: false }} />
+            </div>
+          </div>
           {/* Search Input */}
           <div className="mb-4">
             <input
@@ -225,7 +308,11 @@ export default function Dashboard() {
                       <tr key={index} className="border-t">
                         <td className="px-4 py-2">{app.company}</td>
                         <td className="px-4 py-2">{app.role}</td>
-                        <td className="px-4 py-2 text-green-600 font-semibold">{app.status}</td>
+                        <td className="px-4 py-2">
+                          <span className={`px-2 py-1 rounded-full text-sm font-semibold ${getStatusStyle(app.status)}`}>
+                            {app.status}
+                          </span>
+                        </td>
                         <td className="px-4 py-2">{app.date}</td>
                         <td className="px-4 py-2 space-x-2">
                           <button
