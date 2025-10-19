@@ -1,6 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Dashboard() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [sortOrder, setSortOrder] = useState("newest");
   const [applications, setApplications] = useState([]);
   const [formData, setFormData] = useState({
     company: "",
@@ -9,6 +12,17 @@ export default function Dashboard() {
     date: "",
   });
   const [editIndex, setEditIndex] = useState(null);
+
+  // Load from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem("applications");
+    if (saved) setApplications(JSON.parse(saved));
+  }, []);
+
+  // Save to localStorage on change
+  useEffect(() => {
+    localStorage.setItem("applications", JSON.stringify(applications));
+  }, [applications]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -66,11 +80,11 @@ export default function Dashboard() {
             </div>
             <div className="bg-white p-4 rounded shadow text-center">
               <h3 className="text-lg font-semibold text-gray-700">Interviews</h3>
-              <p className="text-3xl font-bold text-green-600">5</p>
+              <p className="text-3xl font-bold text-green-600">0</p>
             </div>
             <div className="bg-white p-4 rounded shadow text-center">
               <h3 className="text-lg font-semibold text-gray-700">Offers</h3>
-              <p className="text-3xl font-bold text-purple-600">2</p>
+              <p className="text-3xl font-bold text-purple-600">0</p>
             </div>
           </div>
 
@@ -120,6 +134,67 @@ export default function Dashboard() {
             </form>
           </div>
 
+          {/* Search Input */}
+          <div className="mb-4">
+            <input
+              type="text"
+              placeholder="Search by company..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full md:w-1/3 border p-2 rounded"
+            />
+          </div>
+
+          <div className="mb-4 flex flex-col md:flex-row gap-4">
+            <input
+              type="text"
+              placeholder="Search by company..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full md:w-1/3 border p-2 rounded"
+            />
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="w-full md:w-1/4 border p-2 rounded"
+            >
+              <option value="">All Statuses</option>
+              <option value="Applied">Applied</option>
+              <option value="Interview">Interview</option>
+              <option value="Offer">Offer</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+          </div>
+           
+          <div className="mb-4 flex flex-col md:flex-row gap-4">
+            <input
+              type="text"
+              placeholder="Search by company..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full md:w-1/3 border p-2 rounded"
+            />
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="w-full md:w-1/4 border p-2 rounded"
+            >
+              <option value="">All Statuses</option>
+              <option value="Applied">Applied</option>
+              <option value="Interview">Interview</option>
+              <option value="Offer">Offer</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+            <select
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+              className="w-full md:w-1/4 border p-2 rounded"
+            >
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+            </select>
+          </div>
+
           {/* Job Application Table */}
           <div className="mt-10">
             <h2 className="text-xl font-semibold mb-4">Your Applications</h2>
@@ -134,28 +209,40 @@ export default function Dashboard() {
                 </tr>
               </thead>
               <tbody>
-                {applications.map((app, index) => (
-                  <tr key={index} className="border-t">
-                    <td className="px-4 py-2">{app.company}</td>
-                    <td className="px-4 py-2">{app.role}</td>
-                    <td className="px-4 py-2 text-green-600 font-semibold">{app.status}</td>
-                    <td className="px-4 py-2">{app.date}</td>
-                    <td className="px-4 py-2 space-x-2">
-                      <button
-                        onClick={() => handleEdit(index)}
-                        className="text-blue-500 hover:underline"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(index)}
-                        className="text-red-500 hover:underline"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {applications
+                    .filter((app) =>
+                      app.company.toLowerCase().includes(searchTerm.toLowerCase()) &&
+                      (statusFilter === "" || app.status === statusFilter)
+                    )
+                    .sort((a, b) => {
+                      const dateA = new Date(a.date);
+                      const dateB = new Date(b.date);
+                      return sortOrder === "newest"
+                        ? dateB - dateA
+                        : dateA - dateB;
+                    })
+                    .map((app, index) => (
+                      <tr key={index} className="border-t">
+                        <td className="px-4 py-2">{app.company}</td>
+                        <td className="px-4 py-2">{app.role}</td>
+                        <td className="px-4 py-2 text-green-600 font-semibold">{app.status}</td>
+                        <td className="px-4 py-2">{app.date}</td>
+                        <td className="px-4 py-2 space-x-2">
+                          <button
+                            onClick={() => handleEdit(index)}
+                            className="text-blue-500 hover:underline"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => handleDelete(index)}
+                            className="text-red-500 hover:underline"
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                  ))}
               </tbody>
             </table>
           </div>
