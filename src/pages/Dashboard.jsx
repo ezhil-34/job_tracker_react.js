@@ -129,11 +129,7 @@ export default function Dashboard() {
       {/* Sidebar */}
       <aside className="w-64 bg-white dark:bg-gray-800 shadow-md p-6">
         <h2 className="text-xl font-bold mb-6 text-blue-600">Job Tracker</h2>
-        <nav className="space-y-4">
-          <a href="#" className="block text-gray-700 dark:text-gray-300 hover:text-blue-500">Dashboard</a>
-          <a href="#" className="block text-gray-700 dark:text-gray-300 hover:text-blue-500">Applications</a>
-          <a href="#" className="block text-gray-700 dark:text-gray-300 hover:text-blue-500">Profile</a>
-        </nav>
+        
       </aside>
 
       {/* Main Content */}
