@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Pie } from "react-chartjs-2";
 import { Bar } from "react-chartjs-2";
+import { useNavigate, Link } from "react-router-dom";
+
 
 
 import {
@@ -39,6 +41,7 @@ export default function Dashboard() {
     date: "",
   });
   const [editIndex, setEditIndex] = useState(null);
+  const navigate = useNavigate();
   //prepare chart data
   const statusCounts = applications.reduce((acc, app) => {
   acc[app.status] = (acc[app.status] || 0) + 1;
@@ -56,15 +59,28 @@ export default function Dashboard() {
   };
 
   // Load from localStorage on mount
-  useEffect(() => {
-    const saved = localStorage.getItem("applications");
-    if (saved) setApplications(JSON.parse(saved));
-  }, []);
+ 
+   useEffect(() => {
+    const user = localStorage.getItem("loggedInUser");
+    if (!user) {
+      navigate("/login");
+    }
+  }, [navigate]);
+
+  const user = JSON.parse(localStorage.getItem("loggedInUser"));
+  const userKey = user ? `applications_${user.email}` : "applications";
 
   // Save to localStorage on change
   useEffect(() => {
-    localStorage.setItem("applications", JSON.stringify(applications));
-  }, [applications]);
+    const saved = localStorage.getItem(userKey);
+    if (saved) setApplications(JSON.parse(saved));
+  }, [userKey]);
+
+  useEffect(() => {
+    localStorage.setItem(userKey, JSON.stringify(applications));
+  }, [applications, userKey]);
+
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -142,7 +158,15 @@ export default function Dashboard() {
           >
             Toggle Dark Mode
           </button>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Logout</button>
+
+          <button
+            onClick={() => {
+              localStorage.removeItem("loggedInUser");
+              navigate("/");
+            }}
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+            Logout
+          </button>
         </header>
 
         <section>
