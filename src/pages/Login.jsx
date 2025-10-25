@@ -19,7 +19,10 @@ export default function Login() {
         <h2 className="text-2xl font-bold mb-4 text-center">Sign In</h2>
         <input name="email" placeholder="Email" onChange={handleChange} className="w-full mb-3 p-2 border rounded" />
         <input name="password" type="password" placeholder="Password" onChange={handleChange} className="w-full mb-4 p-2 border rounded" />
-        <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">Login</button>
+        <div className="space-x-4">
+          <a href="/Dashboard" className=" w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">login</a>
+         
+        </div>
       </form>
     </div>
   );
