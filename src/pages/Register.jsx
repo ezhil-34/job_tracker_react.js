@@ -9,20 +9,18 @@ export default function Register() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const users = JSON.parse(localStorage.getItem("users")) || [];
 
-    const emailExists = users.some((user) => user.email === form.email);
-    if (emailExists) {
-      alert("Email already registered!");
-      return;
-    }
+    const res = await fetch("http://localhost:5000/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
+    });
 
-    users.push(form);
-    localStorage.setItem("users", JSON.stringify(users));
-    alert("Registration successful!");
-    navigate("/login");
+    const data = await res.json();
+    alert(data.message);
+    if (res.ok) navigate("/login");
   };
 
   return (
@@ -57,7 +55,10 @@ export default function Register() {
           onChange={handleChange}
           className="w-full mb-4 p-2 border rounded"
         />
-        <button type="submit" className="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+        <button
+          type="submit"
+          className="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        >
           Register
         </button>
       </form>
