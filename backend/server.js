@@ -8,7 +8,10 @@ const appRoutes = require("./routes/appRoutes");
 connectDB();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: ["https://job-tracker-react-js.vercel.app"],
+  credentials: true
+}));
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
