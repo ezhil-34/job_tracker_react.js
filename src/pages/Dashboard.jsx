@@ -29,7 +29,7 @@ export default function Dashboard() {
 
   const fetchApplications = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/applications", {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/applications`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setApplications(res.data);
@@ -49,7 +49,7 @@ export default function Dashboard() {
     try {
       if (editId) {
         const res = await axios.put(
-          `http://localhost:5000/api/applications/${editId}`,
+          `${import.meta.env.VITE_API_URL}/api/applications/${editId}`,
           formData,
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -57,7 +57,7 @@ export default function Dashboard() {
         setEditId(null);
       } else {
         const res = await axios.post(
-          "http://localhost:5000/api/applications",
+          `${import.meta.env.VITE_API_URL}/api/applications`,
           formData,
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -71,7 +71,7 @@ export default function Dashboard() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/applications/${id}`, {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/applications/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setApplications(applications.filter((app) => app._id !== id));
